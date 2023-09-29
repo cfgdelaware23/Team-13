@@ -65,3 +65,11 @@ cd backend
    ```txt
    pip install -r requirements.txt
    ```
+
+5. 
+
+Run the flask app
+
+```txt
+flask run
+```
