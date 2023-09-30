@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native
 import { Picker } from '@react-native-picker/picker';
 import { FAB } from '@rneui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as Animatable from 'react-native-animatable';
+import RNHapticFeedback from 'react-native-haptic-feedback';
 
 
 const Category = ({ navigation }: {navigation: any}) => {
@@ -11,7 +13,7 @@ const Category = ({ navigation }: {navigation: any}) => {
   const [showViewAll, setShowViewAll] = useState(false);
 
   const categories = {
-    Fruits: ['Apple', 'Banana', 'Orange'],
+    Fruits: ['Apple', 'Banana', 'Orange', 'Strawberry', 'Watermelon', 'Pear'],
     Vegetables: ['Broccoli', 'Carrot', 'Lettuce'],
     Protein: ['Chicken', 'Fish', 'Tofu'],
   };
@@ -19,9 +21,16 @@ const Category = ({ navigation }: {navigation: any}) => {
   const allItems = Object.values(categories).flat();
 
   const areButtonsDisabled = selectedCategory === null;
-
+  const options = {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false
+  };
   return (
+    
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Categories</Text>
+      </View>
       {showPicker && !showViewAll && (
         <View style={styles.pickerContainer}>
           <Picker
@@ -41,7 +50,10 @@ const Category = ({ navigation }: {navigation: any}) => {
                 styles.confirmButton,
                 areButtonsDisabled && styles.disabledButton
               ]}
-              onPress={() => areButtonsDisabled ? {} : setShowPicker(false)}
+              onPress={() => {
+                areButtonsDisabled ? {} : setShowPicker(false)
+              }}
+    
             >
               <Text style={styles.buttonText}>Confirm Choice</Text>
             </TouchableOpacity>
@@ -58,7 +70,11 @@ const Category = ({ navigation }: {navigation: any}) => {
           </View>
         </View>
       )}
-
+        {categories[selectedCategory]?.length === 0 && (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No items in this category.</Text>
+          </View>
+        )}
       {selectedCategory && !showPicker && !showViewAll && (
         <View style={styles.listContainer}>
           <TouchableOpacity style={styles.changeButton} onPress={() => setShowPicker(true)}>
@@ -67,7 +83,11 @@ const Category = ({ navigation }: {navigation: any}) => {
           <FlatList
             data={categories[selectedCategory]}
             keyExtractor={(item) => item}
-            renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+            renderItem={({ item, index }) => (
+            <Animatable.View animation="fadeInUp" delay={index * 150} useNativeDriver>
+            <Text style={styles.item}>{item}</Text>
+          </Animatable.View>
+            )}
           />
         </View>
       )}
@@ -112,6 +132,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E5E5',
     borderRadius: 8,
     marginBottom: 20,
+    elevation: 3, // Android shadow
+    shadowColor: 'black', // iOS shadow
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   pickerItem: {
     backgroundColor: '#E5E5E5',
@@ -125,6 +150,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
+    elevation: 3,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    marginBottom: 10,
   },
   listContainer: {
     flex: 1,
@@ -137,6 +168,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 10,
+    elevation: 3,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
   },
   buttonText: {
     color: '#293241',
@@ -156,9 +192,41 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#293241',
     fontWeight: 'bold',
+    elevation: 2,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    opacity: 0.95,  // Just a hint of transparency for a glassy look
   },
   disabledButton: {
     backgroundColor: '#D3D3D3',
+  },
+  header: {
+    backgroundColor: '#3D5A80',
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  headerText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: '#293241',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
