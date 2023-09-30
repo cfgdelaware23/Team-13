@@ -1,13 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import CartIncrement from './components/CartIncrement';
-import { useState } from 'react';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import Welcome from './components/welcome'; // Make sure to adjust the path if your file structure is different
 
 export default function App() {
   const [count, setCount] = useState(2);
   return (
     <View style={styles.container}>
-      <CartIncrement setCount = {setCount} count = {count}/>
+      <Welcome />
+      <StatusBar style="auto" />
     </View>
   )
 }
