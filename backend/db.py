@@ -19,13 +19,9 @@ def create_tables():
 
 def populate_tables():
     prod_data_csv = open('prodData.csv', encoding='utf-8-sig')
-    #user_data_csv = open('user.csv', encoding='utf-8-sig')
     prod_content = csv.reader(prod_data_csv)
-    #user_content = csv.reader(user_data_csv)
     insert_prod_records = "INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    #insert_user_records = "INSERT INTO users (id, modifier) VALUES (?, ?)"
     c.executemany(insert_prod_records, prod_content)
-    #c.executemany(insert_user_records, user_content)
 
 def create_user(id, modifier):
     c = db.cursor()
@@ -58,7 +54,6 @@ def add_product_to_cart(user_id, product_id, quantity):
     product_price = c.fetchone()
 
     c.execute("SELECT modifier FROM users WHERE id = ?;", [user_id])
-    print(product_price)
     modified_product_price  = c.fetchone()[0] * float(product_price[0])
    
     if existing_product:
@@ -120,6 +115,9 @@ def add_product(product_id, product_price, product_name, product_sku, prod_categ
     c.execute("INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?);", (product_id, product_price, product_name, product_sku, prod_category, prod_image, prod_aisle))
     db.commit()
 
+
+
+"""
 c.execute("DELETE FROM products")
 c.execute("DELETE FROM users")
 c.execute("DELETE FROM cart")
@@ -134,11 +132,11 @@ select_prods = "SELECT * FROM products"
 select_users = "SELECT * FROM users"
 prod_rows = c.execute(select_prods).fetchall()
 user_rows = c.execute(select_users).fetchall()
-#for user in user_rows:
-    #print(user)
-#for prod in prod_rows:
-#    print(prod)
-
+for user in user_rows:
+    print(user)
+for prod in prod_rows:
+    print(prod)
 
 add_product_to_cart("512380", '1', 1)
 print(get_cart("512380"))
+"""
