@@ -29,6 +29,7 @@ const CartItem = ({startCount, product} : Props) => {
     return(
         <ListItem.Swipeable
             leftWidth={80}
+            color={"grey"}
             rightWidth={90}
             minSlideWidth={40}
             rightContent={(action) => (
@@ -43,7 +44,7 @@ const CartItem = ({startCount, product} : Props) => {
                 icon={{ name: "delete-outline" }}
                 onPress={action}
                 />
-        )} style={styles.container} bottomDivider>
+        )} containerStyle={styles.container} bottomDivider>
             <CartIncrement count={count} setCount={setCount}/>
             <Avatar
             rounded
@@ -63,18 +64,19 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         width: '100%',
         flex: 1,
+        
       },
     container: {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: 50,
-        marginBottom: 36
+        backgroundColor: "#FAFAFA"
     },
     textContainer: {
         display: "flex",
         flexDirection: "column",
+        
     },
 });
 

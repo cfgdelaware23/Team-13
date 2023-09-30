@@ -4,40 +4,43 @@ import { Text } from '@rneui/themed';
 import { ListItem, Avatar } from '@rneui/themed'
 import CartItem from './CartItem'
 
-const CartScrollable = () => {
-    const list = [
-        {
-            price: 15,
-            name: "apple",
-            sku: 12345,
-            category: "fruit",
-            imageURL: "https://thumbs.dreamstime.com/b/red-apple-isolated-clipping-path-19130134.jpg",
-            location: "aisle 1"
-          },
-      {
-        price: 15,
-        name: "apple",
-        sku: 12345,
-        category: "fruit",
-        imageURL: "https://thumbs.dreamstime.com/b/red-apple-isolated-clipping-path-19130134.jpg",
-        location: "aisle 1"
-      },
-    ];
+interface Product {
+    price: number;
+    name: string;
+    sku: number;
+    category: string;
+    imageURL: string;
+    location: string;
+  }
+
+interface Props {
+  shoppingList: Array<Product>
+}
+
+const CartScrollable = ({shoppingList} : Props) => {
 
     return(
-        <ScrollView>
+        <ScrollView style={styles.scrollable}>
+            <Text h3>{"Current Shopping List:"}</Text>
         {
-            list.map((l, i) => (
-            <CartItem startCount={1} product={l} style={styles.card}/>
+            
+            shoppingList.map((l, i) => (
+            <CartItem startCount={1} product={l} key={i}/>
             ))
         }
         </ScrollView>
 )}
 
 const styles = StyleSheet.create({
-    card: {
-        height: 1000
+    scrollable: {
+        flex: 1,
+        paddingTop: 30
+    },
+    h3Style: {
+        fontFamily: 'Helvetica-Bold',
+        fontWeight: '300',
       },
+
 });
 
 export default CartScrollable;
