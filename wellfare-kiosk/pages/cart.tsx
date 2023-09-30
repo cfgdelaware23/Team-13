@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import CartScrollable from '../components/CartScrollable';
 import {Text} from '@rneui/themed';
+import { useEffect, useState } from 'react';
 
 interface Product {
     price: number;
@@ -9,6 +10,7 @@ interface Product {
     category: string;
     imageURL: string;
     location: string;
+    quantity: number;
   }
 
 interface Props {
@@ -23,35 +25,51 @@ const list = [
         sku: 12345,
         category: "fruit",
         imageURL: "https://thumbs.dreamstime.com/b/red-apple-isolated-clipping-path-19130134.jpg",
-        location: "aisle 1"
+        location: "aisle 1",
+        quantity: 2
       },
-  {
-    price: 15,
-    name: "apple",
-    sku: 12345,
-    category: "fruit",
-    imageURL: "https://thumbs.dreamstime.com/b/red-apple-isolated-clipping-path-19130134.jpg",
-    location: "aisle 1"
-  },
+      {
+        price: 15,
+        name: "apple",
+        sku: 12345,
+        category: "fruit",
+        imageURL: "https://thumbs.dreamstime.com/b/red-apple-isolated-clipping-path-19130134.jpg",
+        location: "aisle 1",
+        quantity: 2
+      },
+  
 ];
 
 /** Component for Dummy Page */
-const Cart = ({shoppingList, augmentationFunction} : Props) => {
+ const Cart = ({shoppingList, augmentationFunction} : Props) => {
     shoppingList = list;
-    augmentationFunction = (n) => n / 2
-    let currentTotalNoDiscount = 0;
+    let temp = 0;
+    augmentationFunction = (n) => n / 3
     for (let i = 0; i < shoppingList.length; i++){
-        currentTotalNoDiscount += shoppingList[i].price;
+        temp += shoppingList[i].price * shoppingList[i].quantity;
     }
-    let currentTotal = augmentationFunction(currentTotalNoDiscount);
+    let currentTotalNoDiscount = temp;
+    const [currentTotal, setcurrentTotal] = useState(augmentationFunction(currentTotalNoDiscount));
+
+    function setQuantity(key: number, newVal: number){
+        shoppingList[key].quantity = newVal;
+
+        let temp = 0;
+        for (let i = 0; i < shoppingList.length; i++){
+            temp += shoppingList[i].price * shoppingList[i].quantity;
+        }
+        currentTotalNoDiscount = temp;
+        setcurrentTotal(augmentationFunction(currentTotalNoDiscount));
+    }
+
   return (
     <View style={styles.container}>
         <View style={[styles.listContainer, styles.shadowProp]}>
-            <CartScrollable shoppingList={list}/>
+            <CartScrollable shoppingList={list} setQuantity={setQuantity}/>
         </View>
         <View style={styles.textContainer}>
             <Text h1>{"Current Total: $" + currentTotal}</Text>
-            <Text h4>{"You saved $" + currentTotalNoDiscount}</Text>
+            <Text h4>{"You saved $" + (currentTotalNoDiscount - currentTotal)}</Text>
         </View>
     </View>
   );

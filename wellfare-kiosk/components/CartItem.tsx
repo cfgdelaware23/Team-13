@@ -12,49 +12,50 @@ interface Product {
     category: string;
     imageURL: string;
     location: string;
+    quantity: number;
   }
 
 interface Props {
-  startCount?: number;
   product: Product;
+  index: number;
+  setQuantity: (index: number, newVal: number) => void;
 }
 
 
-const CartItem = ({startCount, product} : Props) => {
-    if (typeof startCount == 'undefined') {
-        startCount = 1;
+const CartItem = ({product, index, setQuantity} : Props) => {
+    const [count, setCount] = useState(product.quantity);
+    function setQuantityCount(newVal: number) {
+        setQuantity(index, newVal);
+        setCount(newVal);
     }
-    const [count, setCount] = useState(startCount);
-
     return(
         <ListItem.Swipeable
-            leftWidth={80}
-            color={"grey"}
-            rightWidth={90}
-            minSlideWidth={40}
+            leftWidth={20}
+            rightWidth={100}
+            minSlideWidth={20}
             rightContent={(action) => (
                 <Button
                 containerStyle={{
                     flex: 1,
                     justifyContent: "center",
-                    backgroundColor: "#f4f4f4",
-                    maxHeight: "80%"
+                    backgroundColor: "#D63C23",
+                    maxHeight: "100%"
                 }}
                 type="clear"
                 icon={{ name: "delete-outline" }}
                 onPress={action}
                 />
         )} containerStyle={styles.container} bottomDivider>
-            <CartIncrement count={count} setCount={setCount}/>
+            <CartIncrement quantity={count} setQuantity={setQuantityCount}/>
             <Avatar
             rounded
             source={{ uri: product.imageURL }}
             />
             <ListItem.Content>
                 <ListItem.Title>{product.name}</ListItem.Title>
-                <ListItem.Subtitle>{"$" + product.price}</ListItem.Subtitle>
                 <ListItem.Subtitle>{product.location}</ListItem.Subtitle>
             </ListItem.Content>
+            <Button color="#6dab7d" size="md">{"$" + product.price}</Button>
         </ListItem.Swipeable>
     )
 };

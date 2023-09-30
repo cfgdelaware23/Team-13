@@ -11,21 +11,27 @@ interface Product {
     category: string;
     imageURL: string;
     location: string;
+    quantity: number;
   }
 
 interface Props {
   shoppingList: Array<Product>
+  setQuantity: (index: number, newVal: number) => void
 }
 
-const CartScrollable = ({shoppingList} : Props) => {
+const CartScrollable = ({shoppingList, setQuantity} : Props) => {
 
     return(
         <ScrollView style={styles.scrollable}>
-            <Text h3>{"Current Shopping List:"}</Text>
+            <Text style={styles.h3Style}>{"Current Shopping List:"}</Text>
         {
             
-            shoppingList.map((l, i) => (
-            <CartItem startCount={1} product={l} key={i}/>
+            shoppingList.map((l, key) => (
+            <View>
+                <CartItem product={l} index={key} setQuantity={setQuantity} />
+            </View>
+            
+                
             ))
         }
         </ScrollView>
@@ -37,8 +43,11 @@ const styles = StyleSheet.create({
         paddingTop: 30
     },
     h3Style: {
-        fontFamily: 'Helvetica-Bold',
-        fontWeight: '300',
+        fontFamily:"Helvetica",
+        fontSize: 24,
+        fontWeight: "bold",
+        alignSelf: "center",
+        marginBottom: 10
       },
 
 });
