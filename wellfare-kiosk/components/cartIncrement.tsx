@@ -38,6 +38,7 @@ const CartIncrement = ({ setCount, count }: Props) => (
                 containerStyle={{
                     height: 40,
                     width: 40,
+                    marginBottom: -20
                 }}
                 onPress= {() => setCount(Math.max(count - 1, 0))}
             />
