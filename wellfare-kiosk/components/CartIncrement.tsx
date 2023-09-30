@@ -4,11 +4,11 @@ import { Text } from '@rneui/themed';
 import { Button } from '@rneui/themed';
 
 interface Props {
-  setCount: React.Dispatch<React.SetStateAction<number>>;
-  count: number;
+    setQuantity: (newVal: number) => void;
+    quantity: number;
 }
 
-const CartIncrement = ({ setCount, count }: Props) => (
+const CartIncrement = ({ setQuantity, quantity }: Props) => (
     <View>
             <Button
                 type="clear"
@@ -23,9 +23,9 @@ const CartIncrement = ({ setCount, count }: Props) => (
                     height: 20,
                     width: 40,
                 }}
-                onPress= {() => setCount(count + 1)}
+                onPress= {() => setQuantity(quantity + 1)}
             />
-            <Text style={styles.text}>{count}</Text>
+            <Text style={styles.text}>{quantity}</Text>
             <Button
                 type="clear"
                 size="sm"
@@ -40,7 +40,7 @@ const CartIncrement = ({ setCount, count }: Props) => (
                     width: 40,
                     marginBottom: -20
                 }}
-                onPress= {() => setCount(Math.max(count - 1, 0))}
+                onPress= {() => setQuantity(Math.max(quantity - 1, 0))}
             />
     </View>
 );
