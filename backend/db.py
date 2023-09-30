@@ -129,7 +129,7 @@ def get_cart_contents(user_id):
 
 def get_products_of_type(type):
     c = db.cursor()
-    c.execute("SELECT price, name, sku, image_url, aisle FROM products WHERE category = ?;", (type,))
+    c.execute("SELECT id, price, name, sku, image_url, aisle FROM products WHERE category = ?;", (type,))
     type_contents = c.fetchall()
     return type_contents
 

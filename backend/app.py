@@ -14,10 +14,10 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
 
-@app.route("/cart", methods = ["GET"])
+@app.route("/cart", methods = ["POST"])
 def getCartRoute():
     data = request.get_json()
-    return getCart(data)
+    return getCart(data["user_id"])
 
 @app.route("/cart/add", methods =["PUT"])
 def addToCartRoute():
@@ -26,7 +26,7 @@ def addToCartRoute():
         return {"message":"success"}
     else: 
         {"message":"failure"}
-        
+
 @app.route("/cart/subtract", methods=["PUT"])
 def subtractFromCartRoute():
     pass
@@ -37,7 +37,7 @@ def deleteFromCartRoute():
 
 # Product routes
 
-@app.route('/products', methods=['GET'])
+@app.route('/products', methods=['POST'])
 def getProductsRoute():
     products = jsonify(getProducts())
     return products
