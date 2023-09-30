@@ -1,6 +1,8 @@
 import json
 from flask import Flask, request, jsonify
 from products import getProductInfo, getProducts, getProductCategory
+from cart import addToCart 
+
 
 from cart import getCart
 from flask import request
@@ -19,8 +21,12 @@ def getCartRoute():
 
 @app.route("/cart/add", methods =["PUT"])
 def addToCartRoute():
-    pass
-
+    data = request.get_json()
+    if addToCart(data["user_id"], data["product_id"]):
+        return {"message":"success"}
+    else: 
+        {"message":"failure"}
+        
 @app.route("/cart/subtract", methods=["PUT"])
 def subtractFromCartRoute():
     pass
