@@ -18,9 +18,11 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome">
+      <Stack.Navigator screenOptions={{
+          headerShown: false
+        }}>
         <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Category" component={Category} />
+        <Stack.Screen name="Cart" component={Cart} />
       </Stack.Navigator>
     </NavigationContainer>
   );

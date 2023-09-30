@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { StyleSheet, View, Text, Button, Image, TouchableOpacity } from 'react-native';
-import contactlessIcon from "../assets/contactless-icon.png"
+import contactlessIcon from "../assets/contactless-icon.png";
+const Pulse = require('react-native-pulse').default;
 
 const Welcome = ({ navigation }: {navigation: any}) => {
   return (
@@ -11,6 +12,7 @@ const Welcome = ({ navigation }: {navigation: any}) => {
       
       <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
         <Image source={contactlessIcon} style={styles.icon}/>
+        <Pulse color='#6F96A3' numPulses={3} diameter={200} speed={20} duration={2000} />
       </TouchableOpacity>
     </View>
   );
@@ -24,6 +26,7 @@ const styles = StyleSheet.create({
   },
   icon:
   {
+    marginLeft: 90,
   },
   welcomeText:{
     fontSize: 40,
