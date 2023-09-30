@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Welcome from './components/welcome'; 
-import Category from './components/category';
-import Fruits from './components/fruits';
-import Vegetables from './components/vegetables';
-import Protein from './components/protein';
+import Welcome from './pages/welcome'; 
+import Category from './pages/category';
+import Fruits from './pages/fruits';
+import Vegetables from './pages/vegetables';
+import Protein from './pages/protein';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
