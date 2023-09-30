@@ -2,6 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Welcome from './pages/welcome'; 
+import Cart from './pages/cart'; 
+import Category from './pages/category';
+import Fruits from './pages/fruits';
+import Vegetables from './pages/vegetables';
+import Protein from './pages/protein';
 import Category from './pages/category'; 
 
 import { NavigationContainer } from '@react-navigation/native';
