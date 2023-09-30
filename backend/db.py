@@ -109,7 +109,8 @@ def get_product_info(product_id):
 
 def calculate_cart_total(user_id):
     c = db.cursor()
-    c.execute("SELECT SUM(p.price * cc.quantity) FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
+    c.execute("SELECT total_price FROM cart WHERE user_id = ?;", (user_id,))
+    #c.execute("SELECT SUM(p.price * cc.quantity) FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
     total_price = c.fetchone()[0]
     return total_price if total_price else 0
 
@@ -170,3 +171,16 @@ print(get_cart("512380"))
 empty_cart("512380")
 print(get_cart("512380"))
 
+
+
+add_product_to_cart("512380", '1', 1)
+add_product_to_cart("512380", '1', 1)
+
+#get_product_info tests
+print(get_product_info('1'))
+
+#calculate_cart_total tests
+print(calculate_cart_total("512380")) #should be $2.40, NOT $3
+
+#get_cart_contents tests
+print(get_cart_contents("512380"))
