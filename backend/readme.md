@@ -31,7 +31,7 @@ cd backend
 2. Create the virtual environment
 
    ```txt
-   virutalenv env
+   virtualenv venv
    ```
 
    or 
