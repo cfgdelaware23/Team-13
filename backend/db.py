@@ -179,3 +179,4 @@ print(get_cart("512380"))
 remove_product_from_cart("512380", '1')
 print(get_cart("512380"))
 empty_cart("512380")
+"""
