@@ -1,12 +1,11 @@
-// Category.tsx
-
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 const Category = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showPicker, setShowPicker] = useState(true);
+  const [showViewAll, setShowViewAll] = useState(false);
 
   const categories = {
     Fruits: ['Apple', 'Banana', 'Orange'],
@@ -14,31 +13,51 @@ const Category = () => {
     Protein: ['Chicken', 'Fish', 'Tofu'],
   };
 
+  const allItems = Object.values(categories).flat();
+
+  const areButtonsDisabled = selectedCategory === null;
+
   return (
     <View style={styles.container}>
-      {showPicker && (
-        <Picker
-          selectedValue={selectedCategory}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-        >
-          <Picker.Item label="Select a Category" value={null} />
-          {Object.keys(categories).map((key) => (
-            <Picker.Item key={key} label={key} value={key} />
-          ))}
-        </Picker>
-      )}
-
-      {selectedCategory && showPicker && (
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => setShowPicker(false)}>
-            <Text style={styles.buttonText}>Confirm Choice</Text>
-          </TouchableOpacity>
+      {showPicker && !showViewAll && (
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedCategory}
+            style={styles.picker}
+            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+            itemStyle={styles.pickerItem}
+          >
+            <Picker.Item label="Select a Category" value={null} color="#3D5A80" />
+            {Object.keys(categories).map((key) => (
+              <Picker.Item key={key} label={key} value={key} color="#293241" />
+            ))}
+          </Picker>
+          <View style={styles.confirmButtonContainer}>
+            <TouchableOpacity 
+              style={[
+                styles.confirmButton,
+                areButtonsDisabled && styles.disabledButton
+              ]}
+              onPress={() => areButtonsDisabled ? {} : setShowPicker(false)}
+            >
+              <Text style={styles.buttonText}>Confirm Choice</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[
+                styles.confirmButton, 
+                { marginTop: 10 },
+                areButtonsDisabled && styles.disabledButton
+              ]}
+              onPress={() => areButtonsDisabled ? {} : setShowViewAll(true)}
+            >
+              <Text style={styles.buttonText}>View All</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
 
-      {selectedCategory && !showPicker && (
-        <>
+      {selectedCategory && !showPicker && !showViewAll && (
+        <View style={styles.listContainer}>
           <TouchableOpacity style={styles.changeButton} onPress={() => setShowPicker(true)}>
             <Text style={styles.changeButtonText}>Change Category</Text>
           </TouchableOpacity>
@@ -47,47 +66,73 @@ const Category = () => {
             keyExtractor={(item) => item}
             renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
           />
-        </>
+        </View>
+      )}
+
+      {showViewAll && (
+        <View style={styles.listContainer}>
+          <TouchableOpacity style={styles.changeButton} onPress={() => {
+            setShowViewAll(false);
+            setShowPicker(true);
+          }}>
+            <Text style={styles.changeButtonText}>Go Back</Text>
+          </TouchableOpacity>
+          <FlatList
+            data={allItems}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+          />
+        </View>
       )}
     </View>
   );
-}
-
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F4DECB',
+  },
+  pickerContainer: {
+    flex: 1,
     padding: 20,
-    backgroundColor: '#F5F5F5',
+    justifyContent: 'space-between',
   },
   picker: {
     height: 50,
     width: '100%',
+    backgroundColor: '#E5E5E5',
+    borderRadius: 8,
     marginBottom: 20,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 5,
   },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 10,
+  pickerItem: {
+    backgroundColor: '#E5E5E5',
+    fontWeight: 'bold',
   },
-  button: {
-    backgroundColor: '#4CAF50',
+  confirmButtonContainer: {
+    padding: 20,
+  },
+  confirmButton: {
+    backgroundColor: '#98C1D9',
     padding: 12,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
   },
-  buttonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 16,
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   changeButton: {
-    backgroundColor: '#FF9800',
+    backgroundColor: '#3D5A80',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
     marginBottom: 10,
+  },
+  buttonText: {
+    color: '#293241',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   changeButtonText: {
     color: '#FFFFFF',
@@ -95,16 +140,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   item: {
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 5,
-    marginTop: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
+    padding: 15,
+    fontSize: 18,
+    backgroundColor: '#E5E5E5',
+    borderRadius: 8,
+    marginTop: 10,
+    color: '#293241',
+    fontWeight: 'bold',
+  },
+  disabledButton: {
+    backgroundColor: '#D3D3D3',
   },
 });
 
