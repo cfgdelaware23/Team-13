@@ -1,6 +1,6 @@
 import json
 from flask import Flask, request, jsonify
-from products import getProductInfo, getProducts, getProductType
+from products import getProductInfo, getProducts, getProductCategory
 
 from cart import getCart
 from flask import request
@@ -31,21 +31,20 @@ def deleteFromCartRoute():
 # Product routes
 
 @app.route('/products', methods=['GET'])
-def getProducts():
-    response = request.get('/products')
-    products = getProducts().json
+def getProductsRoute():
+    products = jsonify(getProducts())
     return products
 
-@app.route('/products/<product_type>', methods=['GET'])
-def getProductType(type):
-    product = getProductType(type)
+@app.route('/products/<category>', methods=['GET'])
+def getProductCategoryRoute(category):
+    product = getProductCategory(category)
     if(product):
         return jsonify(product)
     else:
-        return jsonify({'message': f'No products found for type: {type}'}), 404
+        return jsonify({'message': f'No products found for type: {category}'}), 404
     
-@app.route('/products/<product_id>', methods=['GET'])
-def getProductById(id):
+@app.route('/products/<int:product_id>', methods=['GET'])
+def getProductByIdRoute(product_id):
     product = getProductInfo(id)
     if(product):
         return jsonify(product)
@@ -53,5 +52,5 @@ def getProductById(id):
         return jsonify({'message': 'Product not found'}), 404
 
 if __name__ == "__main__":
-    app.run(debug=True)   
+    app.run()   
 

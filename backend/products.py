@@ -5,8 +5,8 @@ import json
 def getProductInfo(product_id):
     return get_product_info()
 
-def getProductType(type):
-    return get_products_of_type()
+def getProductCategory(category):
+    return get_products_of_type(category)
 
 def getProducts():
     return get_products()
