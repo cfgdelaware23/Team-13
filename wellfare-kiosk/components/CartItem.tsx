@@ -38,7 +38,7 @@ const CartItem = ({product, index, setQuantity} : Props) => {
                 containerStyle={{
                     flex: 1,
                     justifyContent: "center",
-                    backgroundColor: "#D63C23",
+                    backgroundColor: "#c98e53",
                     maxHeight: "100%"
                 }}
                 type="clear"
@@ -55,7 +55,7 @@ const CartItem = ({product, index, setQuantity} : Props) => {
                 <ListItem.Title>{product.name}</ListItem.Title>
                 <ListItem.Subtitle>{product.location}</ListItem.Subtitle>
             </ListItem.Content>
-            <Button color="#6dab7d" size="md">{"$" + product.price}</Button>
+            <Button color="#c98e53" size="md">{"$" + product.price}</Button>
         </ListItem.Swipeable>
     )
 };

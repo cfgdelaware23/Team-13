@@ -109,7 +109,7 @@ const Category = ({ navigation }: {navigation: any}) => {
       )}
       <FAB
                 icon={<MaterialCommunityIcons name="basket" color={"white"} size={25}/>}
-                color="#E9BC8B"
+                color="#6F96A3"
                 placement="right"
                 onPress={() => navigation.navigate('Cart')}
         />
