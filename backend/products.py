@@ -5,7 +5,6 @@ import json
 def getProductInfo(product_id):
 
     product_details = get_product_info(product_id)
-    print(product_details)
     return {
         "product_id": int(product_details[0]), 
         "product_price": float(product_details[1]), 
@@ -19,8 +18,6 @@ def getProductCategory(category):
     
     formatted_products = []
     for product_details in get_products_of_type(category): 
-        print(product_details)
-
         product = {
             "price": float(product_details[0]), 
             "product_name": (product_details[1]), 
