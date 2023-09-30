@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet, View, ActivityIndicator, ScrollView } from 'react-native';
-import { Text } from '@rneui/themed';
+import { Divider, Text } from '@rneui/themed';
 import { ListItem, Avatar } from '@rneui/themed'
 import CartItem from './CartItem'
+import {useFonts} from "expo-font"
 
 interface Product {
     price: number;
@@ -20,10 +21,13 @@ interface Props {
 }
 
 const CartScrollable = ({shoppingList, setQuantity} : Props) => {
-
+    const [fontsLoaded, fontError] = useFonts({
+        'Agrandir': require('../assets/fonts/Agrandir-TextBold.otf'),
+      });
     return(
         <ScrollView style={styles.scrollable}>
             <Text style={styles.h3Style}>{"Current Shopping List:"}</Text>
+            <Divider width={3} />
         {
             
             shoppingList.map((l, key) => (
@@ -43,7 +47,7 @@ const styles = StyleSheet.create({
         paddingTop: 30
     },
     h3Style: {
-        fontFamily:"Helvetica",
+        fontFamily:"Agrandir",
         fontSize: 24,
         fontWeight: "bold",
         alignSelf: "center",

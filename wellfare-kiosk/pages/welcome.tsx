@@ -1,18 +1,39 @@
 // Welcome.tsx
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View, Text, Button, Image, TouchableOpacity } from 'react-native';
 import contactlessIcon from "../assets/contactless-icon.png";
+import wellfareLogo from "../assets/wellfareLogo.png";
+import {useFonts} from "expo-font"
+import * as SplashScreen from 'expo-splash-screen';
 const Pulse = require('react-native-pulse').default;
 
 const Welcome = ({ navigation }: {navigation: any}) => {
+
+    const [fontsLoaded, fontError] = useFonts({
+        'Agrandir': require('../assets/fonts/Agrandir-TextBold.otf'),
+      });
+
+      const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded || fontError) {
+          await SplashScreen.hideAsync();
+        }
+      }, [fontsLoaded, fontError]);
+      
+      if (!fontsLoaded && !fontError) {
+        return null;
+      }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome to the Food Kiosk!</Text>
+      <Image source={wellfareLogo} style={styles.wellfareLogo}/>
+
+      <Text style={styles.welcomeText}>Code for Good Kiosk Demo</Text>
       
       <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+        <Pulse color='#6F96A3' numPulses={3} diameter={400} speed={20} duration={2000} />
         <Image source={contactlessIcon} style={styles.icon}/>
-        <Pulse color='#6F96A3' numPulses={3} diameter={200} speed={20} duration={2000} />
+        
       </TouchableOpacity>
     </View>
   );
@@ -23,14 +44,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: "#FBEBDB"
   },
   icon:
   {
     marginLeft: 90,
   },
+  wellfareLogo:{
+    resizeMode: 'contain',
+    width: 400,
+    marginBottom: -350,
+    marginTop: -350
+  },
   welcomeText:{
     fontSize: 40,
-    fontFamily: "Trebuchet MS",
+    fontFamily: "Agrandir",
     marginBottom: 40
   },
   ring: {
