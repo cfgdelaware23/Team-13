@@ -11,6 +11,7 @@ import { FAB } from '@rneui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 import RNHapticFeedback from 'react-native-haptic-feedback';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Category = ({ navigation }: { navigation: any }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -32,103 +33,115 @@ const Category = ({ navigation }: { navigation: any }) => {
   };
   return (
     <View style={styles.container}>
-      {showPicker && !showViewAll && (
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCategory}
-            style={[styles.picker, styles.shadowProp]}
-            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-            itemStyle={[styles.pickerItem, styles.shadowProp]}
-          >
-            <Picker.Item
-              label='Select a Category'
-              value={null}
-              color='#3D5A80'
-            />
-            {Object.keys(categories).map((key) => (
-              <Picker.Item key={key} label={key} value={key} color='#293241' />
-            ))}
-          </Picker>
-          <View style={styles.confirmButtonContainer}>
+      <LinearGradient
+        colors={['#FBEBDB', '#6F96A3']}
+        start={[0, 0]}
+        end={[1, 1]}
+        style={styles.gradient}
+      >
+        {showPicker && !showViewAll && (
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedCategory}
+              style={[styles.picker, styles.shadowProp]}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+              itemStyle={[styles.pickerItem, styles.shadowProp]}
+            >
+              <Picker.Item
+                label='Select a Category'
+                value={null}
+                color='#3D5A80'
+              />
+              {Object.keys(categories).map((key) => (
+                <Picker.Item
+                  key={key}
+                  label={key}
+                  value={key}
+                  color='#293241'
+                />
+              ))}
+            </Picker>
+            <View style={styles.confirmButtonContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.confirmButton,
+                  areButtonsDisabled && styles.disabledButton,
+                ]}
+                onPress={() => {
+                  areButtonsDisabled ? {} : setShowPicker(false);
+                }}
+              >
+                <Text style={styles.buttonText}>Confirm Choice</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.confirmButton,
+                  { marginTop: 10 },
+                  areButtonsDisabled && styles.disabledButton,
+                ]}
+                onPress={() => (areButtonsDisabled ? {} : setShowViewAll(true))}
+              >
+                <Text style={styles.buttonText}>View All</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        {categories[selectedCategory]?.length === 0 && (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No items in this category.</Text>
+          </View>
+        )}
+        {selectedCategory && !showPicker && !showViewAll && (
+          <View style={styles.listContainer}>
             <TouchableOpacity
-              style={[
-                styles.confirmButton,
-                areButtonsDisabled && styles.disabledButton,
-              ]}
+              style={styles.changeButton}
+              onPress={() => setShowPicker(true)}
+            >
+              <Text style={styles.changeButtonText}>Change Category</Text>
+            </TouchableOpacity>
+            <FlatList
+              data={categories[selectedCategory]}
+              keyExtractor={(item) => item}
+              renderItem={({ item, index }) => (
+                <Animatable.View
+                  animation='fadeInUp'
+                  delay={index * 150}
+                  useNativeDriver
+                >
+                  <Text style={styles.item}>{item}</Text>
+                </Animatable.View>
+              )}
+            />
+          </View>
+        )}
+
+        {showViewAll && (
+          <View style={styles.listContainer}>
+            <TouchableOpacity
+              style={styles.changeButton}
               onPress={() => {
-                areButtonsDisabled ? {} : setShowPicker(false);
+                setShowViewAll(false);
+                setShowPicker(true);
               }}
             >
-              <Text style={styles.buttonText}>Confirm Choice</Text>
+              <Text style={styles.changeButtonText}>Go Back</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.confirmButton,
-                { marginTop: 10 },
-                areButtonsDisabled && styles.disabledButton,
-              ]}
-              onPress={() => (areButtonsDisabled ? {} : setShowViewAll(true))}
-            >
-              <Text style={styles.buttonText}>View All</Text>
-            </TouchableOpacity>
+            <FlatList
+              data={allItems}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+            />
           </View>
-        </View>
-      )}
-      {categories[selectedCategory]?.length === 0 && (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No items in this category.</Text>
-        </View>
-      )}
-      {selectedCategory && !showPicker && !showViewAll && (
-        <View style={styles.listContainer}>
-          <TouchableOpacity
-            style={styles.changeButton}
-            onPress={() => setShowPicker(true)}
-          >
-            <Text style={styles.changeButtonText}>Change Category</Text>
-          </TouchableOpacity>
-          <FlatList
-            data={categories[selectedCategory]}
-            keyExtractor={(item) => item}
-            renderItem={({ item, index }) => (
-              <Animatable.View
-                animation='fadeInUp'
-                delay={index * 150}
-                useNativeDriver
-              >
-                <Text style={styles.item}>{item}</Text>
-              </Animatable.View>
-            )}
-          />
-        </View>
-      )}
-
-      {showViewAll && (
-        <View style={styles.listContainer}>
-          <TouchableOpacity
-            style={styles.changeButton}
-            onPress={() => {
-              setShowViewAll(false);
-              setShowPicker(true);
-            }}
-          >
-            <Text style={styles.changeButtonText}>Go Back</Text>
-          </TouchableOpacity>
-          <FlatList
-            data={allItems}
-            keyExtractor={(item) => item}
-            renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
-          />
-        </View>
-      )}
-      <FAB
-        icon={
-          <MaterialCommunityIcons name='basket' color={'white'} size={25} />
-        }
-        color='#6F96A3'
-        placement='right'
-        onPress={() => navigation.navigate('Cart')}
-      />
+        )}
+        <FAB
+          icon={
+            <MaterialCommunityIcons name='basket' color={'#c98e53'} size={25} />
+          }
+          color='#FAFAFA'
+          placement='right'
+          onPress={() => navigation.navigate('Cart')}
+        />
+      </LinearGradient>
     </View>
   );
 };
@@ -162,7 +175,7 @@ const styles = StyleSheet.create({
     height: 150,
   },
   shadowProp: {
-    shadowColor: '#c98e53',
+    shadowColor: '#1E4182',
     shadowOffset: { width: 5, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
@@ -174,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   confirmButton: {
-    backgroundColor: '#c98e53',
+    backgroundColor: '#1E4182',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -192,7 +205,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   changeButton: {
-    backgroundColor: '#c98e53',
+    backgroundColor: '#1E4182',
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
@@ -215,6 +228,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  gradient: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
   },
   item: {
     padding: 15,

@@ -58,7 +58,7 @@ const CartItem = ({ product, index, setQuantity }: Props) => {
         <ListItem.Title>{product.name}</ListItem.Title>
         <ListItem.Subtitle>{product.location}</ListItem.Subtitle>
       </ListItem.Content>
-      <Button color='#c98e53' size='md'>
+      <Button color='#1E4182' size='md'>
         {'$' + product.price}
       </Button>
     </ListItem.Swipeable>
