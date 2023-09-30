@@ -11,7 +11,7 @@ c = db.cursor()               #facilitate db ops -- you will use cursor to trigg
 
 def create_tables():
     c = db.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER, modifier INTEGER)")
+    c.execute("CREATE TABLE IF NOT EXISTS users(id TEXT, modifier REAL)")
     c.execute("CREATE TABLE IF NOT EXISTS cart(user_id INTEGER, total_price TEXT, money_saved TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS cartcontent(id TEXT, card_id INTEGER, product_id TEXT, quantity INTEGER)")
     c.execute("CREATE TABLE IF NOT EXISTS products(id TEXT, price TEXT, name TEXT, sku TEXT, category TEXT, image_url TEXT, aisle TEXT)")
@@ -19,16 +19,13 @@ def create_tables():
 
 def populate_tables():
     prod_data_csv = open('prodData.csv', encoding='utf-8-sig')
-    user_data_csv = open('user.csv', encoding='utf-8-sig')
-
+    #user_data_csv = open('user.csv', encoding='utf-8-sig')
     prod_content = csv.reader(prod_data_csv)
-    user_content = csv.reader(user_data_csv)
-
+    #user_content = csv.reader(user_data_csv)
     insert_prod_records = "INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    insert_user_records = "INSERT INTO users (id, modifier) VALUES (?, ?)"
-
+    #insert_user_records = "INSERT INTO users (id, modifier) VALUES (?, ?)"
     c.executemany(insert_prod_records, prod_content)
-    c.executemany(insert_user_records, user_content)
+    #c.executemany(insert_user_records, user_content)
 
 def create_user(id, modifier):
     c = db.cursor()
@@ -38,21 +35,44 @@ def create_user(id, modifier):
     db.commit()
 
 def get_cart(user_id):
+    """
+    Returns a list of (product id, quantity) for each product in a customer's cart
+    Also returns total price and money saved
+    """
     c = db.cursor()
     c.execute("SELECT * FROM cart WHERE user_id = ?;", (user_id,))
-    cart_data = c.fetchone()
-    return cart_data
+    cart_metadata = c.fetchone()
+    c.execute("SELECT product_id, quantity FROM cartcontent WHERE card_id = ?;", (user_id,))
+    cart_products = c.fetchall()
+    
+    return cart_metadata, cart_products
 
 def add_product_to_cart(user_id, product_id, quantity):
+
     c = db.cursor()
     
     c.execute("SELECT id, quantity FROM cartcontent WHERE card_id = ? AND product_id = ?;", (user_id, product_id))
     existing_product = c.fetchone()
+
+    c.execute("SELECT price FROM products WHERE id = ?;", (product_id))
+    product_price = c.fetchone()
+
+    c.execute("SELECT modifier FROM users WHERE id = ?;", [user_id])
+    print(product_price)
+    modified_product_price  = c.fetchone()[0] * float(product_price[0])
+   
     if existing_product:
         new_quantity = existing_product[1] + quantity
         c.execute("UPDATE cartcontent SET quantity = ? WHERE id = ?;", (new_quantity, existing_product[0]))
     else:
         c.execute("INSERT INTO cartcontent (card_id, product_id, quantity) VALUES (?, ?, ?);", (user_id, product_id, quantity))
+    
+
+    c.execute("SELECT total_price, money_saved FROM cart WHERE user_id = ?;", (user_id,))
+    curr_totals = c.fetchall()
+    c.execute("UPDATE cart SET total_price = ? WHERE user_id = ?;", (float(curr_totals[0][0])+modified_product_price, user_id))
+    c.execute("UPDATE cart SET money_saved = ? WHERE user_id = ?;", (float(curr_totals[0][1])+float(product_price[0]), user_id))
+
     db.commit()
 
 def remove_product_from_cart(user_id, product_id):
@@ -100,15 +120,25 @@ def add_product(product_id, product_price, product_name, product_sku, prod_categ
     c.execute("INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?);", (product_id, product_price, product_name, product_sku, prod_category, prod_image, prod_aisle))
     db.commit()
 
+c.execute("DELETE FROM products")
+c.execute("DELETE FROM users")
+c.execute("DELETE FROM cart")
 create_tables()
 populate_tables()
 
-#test
+for i in range(512376, 512382):
+    create_user(i, 0.8)
+
+#test population of products and users
 select_prods = "SELECT * FROM products"
 select_users = "SELECT * FROM users"
 prod_rows = c.execute(select_prods).fetchall()
 user_rows = c.execute(select_users).fetchall()
-for user in user_rows:
-    print(user)
-for prod in prod_rows:
-    print(prod)
+#for user in user_rows:
+    #print(user)
+#for prod in prod_rows:
+#    print(prod)
+
+
+add_product_to_cart("512380", '1', 1)
+print(get_cart("512380"))
