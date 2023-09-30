@@ -44,6 +44,9 @@ def get_cart(user_id):
     return cart_metadata, cart_products
 
 def add_product_to_cart(user_id, product_id, quantity):
+    """
+    Adds ONE product at a time from cart
+    """
 
     c = db.cursor()
     
@@ -73,6 +76,9 @@ def add_product_to_cart(user_id, product_id, quantity):
     db.commit()
 
 def remove_product_from_cart(user_id, product_id):
+    """
+    Removes ONE product at a time from cart
+    """
     c = db.cursor()
     #check if there are multiple of product
     c.execute("SELECT id, quantity FROM cartcontent WHERE quantity > 1 AND card_id = ? AND product_id = ?;", (user_id, product_id))
@@ -97,6 +103,9 @@ def remove_product_from_cart(user_id, product_id):
     db.commit()
 
 def empty_cart(user_id):
+    """
+    Delete everything from cart
+    """
     c = db.cursor()
     c.execute("DELETE FROM cartcontent WHERE card_id = ?;", (user_id,))
     c.execute("UPDATE cart SET total_price = 0 WHERE user_id = ?;", (user_id,))
