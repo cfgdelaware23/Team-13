@@ -1,4 +1,3 @@
-id,price,name,sku,category,image_url,aisle
 1, $1.50 ,Tomato,12345678,Vegetable,https://media.istockphoto.com/id/466175630/photo/tomato-isolated-on-white-background.webp?b=1&s=170667a&w=0&k=20&c=zloJA_rdhqA7aJ9O0mDDaBQOzOei3SlW2RCwvH4CxOA=,1
 2, $2.50 ,Cucumber,12345678,Vegetable,https://www.bobtailfruit.co.uk/pub/media/catalog/product/cache/118fd06640efc949eafa2123c39b08e3/1/9/1918.jpg,1
 3, $3.50 ,Apple,12345678,Fruit,https://www.applesfromny.com/wp-content/uploads/2020/06/SnapdragonNEW.png,2
