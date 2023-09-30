@@ -1,73 +1,98 @@
 // Welcome.tsx
 
 import React, { useCallback } from 'react';
-import { StyleSheet, View, Text, Button, Image, TouchableOpacity } from 'react-native';
-import contactlessIcon from "../assets/contactless-icon.png";
-import wellfareLogo from "../assets/wellfareLogo.png";
-import {useFonts} from "expo-font"
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import contactlessIcon from '../assets/contactless-icon.png';
+import wellfareLogo from '../assets/wellfareLogo.png';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { LinearGradient } from 'expo-linear-gradient';
 const Pulse = require('react-native-pulse').default;
 
-const Welcome = ({ navigation }: {navigation: any}) => {
+const Welcome = ({ navigation }: { navigation: any }) => {
+  const [fontsLoaded, fontError] = useFonts({
+    Agrandir: require('../assets/fonts/Agrandir-TextBold.otf'),
+  });
 
-    const [fontsLoaded, fontError] = useFonts({
-        'Agrandir': require('../assets/fonts/Agrandir-TextBold.otf'),
-      });
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
 
-      const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded || fontError) {
-          await SplashScreen.hideAsync();
-        }
-      }, [fontsLoaded, fontError]);
-      
-      if (!fontsLoaded && !fontError) {
-        return null;
-      }
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
-      <Image source={wellfareLogo} style={styles.wellfareLogo}/>
+      <LinearGradient
+        colors={['#FBEBDB', '#6F96A3']}
+        start={[0, 0]}
+        end={[1, 1]}
+        style={styles.gradient}
+      >
+        <Image source={wellfareLogo} style={styles.wellfareLogo} />
 
-      <Text style={styles.welcomeText}>Code for Good Kiosk Demo</Text>
-      
-      <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-        <Pulse color='#6F96A3' numPulses={3} diameter={400} speed={20} duration={2000} />
-        <Image source={contactlessIcon} style={styles.icon}/>
-        
-      </TouchableOpacity>
+        <Text style={styles.welcomeText}>Code for Good Kiosk Demo</Text>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+          <Pulse
+            color='#6F96A3'
+            numPulses={3}
+            diameter={400}
+            speed={20}
+            duration={2000}
+          />
+          <Image source={contactlessIcon} style={styles.icon} />
+        </TouchableOpacity>
+      </LinearGradient>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#FBEBDB"
+    backgroundColor: '#FBEBDB',
   },
-  icon:
-  {
+  icon: {
     marginLeft: 90,
   },
-  wellfareLogo:{
+  wellfareLogo: {
     resizeMode: 'contain',
     width: 400,
     marginBottom: -350,
-    marginTop: -350
+    marginTop: -350,
   },
-  welcomeText:{
+  welcomeText: {
     fontSize: 40,
-    fontFamily: "Agrandir",
-    marginBottom: 40
+    fontFamily: 'Agrandir',
+    marginBottom: 40,
   },
   ring: {
-    position: "absolute",
+    position: 'absolute',
     width: 80,
     height: 80,
     borderRadius: 40,
-    borderColor: "tomato",
+    borderColor: 'tomato',
     borderWidth: 10,
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
   },
 });
 

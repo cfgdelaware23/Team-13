@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { FAB } from '@rneui/themed';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 import RNHapticFeedback from 'react-native-haptic-feedback';
+import { LinearGradient } from 'expo-linear-gradient';
 
-
-
-const Category = ({ navigation }: {navigation: any}) => {
+const Category = ({ navigation }: { navigation: any }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [productsByCategory, setProductsByCategory] = useState([]);
   const [showPicker, setShowPicker] = useState(true);
@@ -37,50 +42,62 @@ const Category = ({ navigation }: {navigation: any}) => {
   const areButtonsDisabled = selectedCategory === null;
   const options = {
     enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false
+    ignoreAndroidSystemSettings: false,
   };
+    
   return (  
-    
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Categories</Text>
-      </View>
-      {showPicker && !showViewAll && (
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCategory}
-            style={styles.picker}
-            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-            itemStyle={styles.pickerItem}
-          >
-            <Picker.Item label="Select a Category" value={null} color="#3D5A80" />
-            {Object.keys(categories).map((key) => (
-              <Picker.Item key={key} label={key} value={key} color="#293241" />
-            ))}
-          </Picker>
-          <View style={styles.confirmButtonContainer}>
-            <TouchableOpacity 
-              style={[
-                styles.confirmButton,
-                areButtonsDisabled && styles.disabledButton
-              ]}
-              onPress={() => {
-                areButtonsDisabled ? {} : setShowPicker(false)
-              }}
-    
+      <LinearGradient
+        colors={['#FBEBDB', '#6F96A3']}
+        start={[0, 0]}
+        end={[1, 1]}
+        style={styles.gradient}
+      >
+        {showPicker && !showViewAll && (
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedCategory}
+              style={[styles.picker, styles.shadowProp]}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+              itemStyle={[styles.pickerItem, styles.shadowProp]}
             >
-              <Text style={styles.buttonText}>Confirm Choice</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[
-                styles.confirmButton, 
-                { marginTop: 10 },
-                areButtonsDisabled && styles.disabledButton
-              ]}
-              onPress={() => areButtonsDisabled ? {} : setShowViewAll(true)}
-            >
-              <Text style={styles.buttonText}>View All</Text>
-            </TouchableOpacity>
+              <Picker.Item
+                label='Select a Category'
+                value={null}
+                color='#3D5A80'
+              />
+              {Object.keys(categories).map((key) => (
+                <Picker.Item
+                  key={key}
+                  label={key}
+                  value={key}
+                  color='#293241'
+                />
+              ))}
+            </Picker>
+            <View style={styles.confirmButtonContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.confirmButton,
+                  areButtonsDisabled && styles.disabledButton,
+                ]}
+                onPress={() => {
+                  areButtonsDisabled ? {} : setShowPicker(false);
+                }}
+              >
+                <Text style={styles.buttonText}>Confirm Choice</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.confirmButton,
+                  { marginTop: 10 },
+                  areButtonsDisabled && styles.disabledButton,
+                ]}
+                onPress={() => (areButtonsDisabled ? {} : setShowViewAll(true))}
+              >
+                <Text style={styles.buttonText}>View All</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       )}
@@ -105,28 +122,33 @@ const Category = ({ navigation }: {navigation: any}) => {
           />
         </View>
       )}
-
-      {showViewAll && (
-        <View style={styles.listContainer}>
-          <TouchableOpacity style={styles.changeButton} onPress={() => {
-            setShowViewAll(false);
-            setShowPicker(true);
-          }}>
-            <Text style={styles.changeButtonText}>Go Back</Text>
-          </TouchableOpacity>
-          <FlatList
-            data={allItems}
-            keyExtractor={(item) => item}
-            renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
-          />
-        </View>
-      )}
-      <FAB
-                icon={<MaterialCommunityIcons name="basket" color={"white"} size={25}/>}
-                color="#6F96A3"
-                placement="right"
-                onPress={() => navigation.navigate('Cart')}
+        {showViewAll && (
+          <View style={styles.listContainer}>
+            <TouchableOpacity
+              style={styles.changeButton}
+              onPress={() => {
+                setShowViewAll(false);
+                setShowPicker(true);
+              }}
+            >
+              <Text style={styles.changeButtonText}>Go Back</Text>
+            </TouchableOpacity>
+            <FlatList
+              data={allItems}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+            />
+          </View>
+        )}
+        <FAB
+          icon={
+            <MaterialCommunityIcons name='basket' color={'#c98e53'} size={25} />
+          }
+          color='#FAFAFA'
+          placement='right'
+          onPress={() => navigation.navigate('Cart')}
         />
+      </LinearGradient>
     </View>
   );
 };
@@ -138,13 +160,13 @@ const styles = StyleSheet.create({
   pickerContainer: {
     flex: 1,
     padding: 20,
-    justifyContent: 'space-between',
   },
   picker: {
+    borderRadius: 16,
     height: 50,
     width: '100%',
-    backgroundColor: '#E5E5E5',
-    borderRadius: 8,
+    backgroundColor: '#FAFAFA',
+    marginTop: 50,
     marginBottom: 20,
     elevation: 3, // Android shadow
     shadowColor: 'black', // iOS shadow
@@ -153,19 +175,32 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   pickerItem: {
-    backgroundColor: '#E5E5E5',
+    borderRadius: 16,
+    backgroundColor: '#FAFAFA',
+    fontFamily: 'Helvetica',
     fontWeight: 'bold',
+    height: 150,
+  },
+  shadowProp: {
+    shadowColor: '#1E4182',
+    shadowOffset: { width: 5, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    zIndex: 5,
   },
   confirmButtonContainer: {
     padding: 20,
+    marginTop: 80,
+    marginBottom: 30,
   },
   confirmButton: {
-    backgroundColor: '#98C1D9',
+    backgroundColor: '#1E4182',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
     elevation: 3,
     shadowColor: 'black',
+    fontFamily: 'Helvetica',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -177,41 +212,51 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   changeButton: {
-    backgroundColor: '#3D5A80',
+    backgroundColor: '#1E4182',
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 10,
     elevation: 3,
+    fontFamily: 'Helvetica',
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
   },
   buttonText: {
-    color: '#293241',
+    color: '#FAFAFA',
+    fontFamily: 'Helvetica',
     fontWeight: 'bold',
     fontSize: 16,
   },
   changeButtonText: {
-    color: '#FFFFFF',
+    color: '#FAFAFA',
+    fontFamily: 'Helvetica',
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  gradient: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
   },
   item: {
     padding: 15,
     fontSize: 18,
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#FAFAFA',
     borderRadius: 8,
     marginTop: 10,
     color: '#293241',
+    fontFamily: 'Helvetica',
     fontWeight: 'bold',
     elevation: 2,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 3,
-    opacity: 0.95,  // Just a hint of transparency for a glassy look
+    opacity: 0.95, // Just a hint of transparency for a glassy look
   },
   disabledButton: {
     backgroundColor: '#D3D3D3',
