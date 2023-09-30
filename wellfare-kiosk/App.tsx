@@ -14,6 +14,7 @@ import { NavigationContainer } from '@react-navigation/native';
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [count, setCount] = useState(2);
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
