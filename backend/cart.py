@@ -17,11 +17,6 @@ def getCart(user_id):
         "money_saved":cart_meta_data[2],
         "shopping_cart": shopping_cart
     }
-    
-    cart_details = get_cart_contents(user_id)
-    return {
-
-    }
 
 def addToCart(user_id, product_id):
     return add_product_to_cart(int(user_id), str(product_id), 1)
