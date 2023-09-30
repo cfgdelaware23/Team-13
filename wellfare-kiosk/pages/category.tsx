@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { FAB } from '@rneui/themed';
@@ -7,16 +7,30 @@ import * as Animatable from 'react-native-animatable';
 import RNHapticFeedback from 'react-native-haptic-feedback';
 
 
+
 const Category = ({ navigation }: {navigation: any}) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [productsByCategory, setProductsByCategory] = useState([]);
   const [showPicker, setShowPicker] = useState(true);
   const [showViewAll, setShowViewAll] = useState(false);
 
+
+
   const categories = {
-    Fruits: ['Apple', 'Banana', 'Orange', 'Strawberry', 'Watermelon', 'Pear'],
-    Vegetables: ['Broccoli', 'Carrot', 'Lettuce'],
-    Protein: ['Chicken', 'Fish', 'Tofu'],
+    Fruit: ['Apple', 'Banana', 'Orange', 'Strawberry', 'Watermelon', 'Pear'],
+    Vegetable: ['Broccoli', 'Carrot', 'Lettuce'],
+    Legume: ['Chicken', 'Fish', 'Tofu'],
   };
+  async function fetchProducts(){
+    const response = await fetch(`http://127.0.0.1:5000/products/${selectedCategory}`)
+    const responseData = await response.json()
+    setProductsByCategory(responseData.products.map((element:any)=>{
+      return element.product_name
+    }))
+  }
+  useEffect(()=>{
+    if (selectedCategory !== null) fetchProducts()
+  }, [selectedCategory])
 
   const allItems = Object.values(categories).flat();
 
@@ -25,7 +39,7 @@ const Category = ({ navigation }: {navigation: any}) => {
     enableVibrateFallback: true,
     ignoreAndroidSystemSettings: false
   };
-  return (
+  return (  
     
     <View style={styles.container}>
       <View style={styles.header}>
@@ -70,7 +84,7 @@ const Category = ({ navigation }: {navigation: any}) => {
           </View>
         </View>
       )}
-        {categories[selectedCategory]?.length === 0 && (
+        {productsByCategory?.length === 0 && (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>No items in this category.</Text>
           </View>
@@ -81,7 +95,7 @@ const Category = ({ navigation }: {navigation: any}) => {
             <Text style={styles.changeButtonText}>Change Category</Text>
           </TouchableOpacity>
           <FlatList
-            data={categories[selectedCategory]}
+            data={productsByCategory}
             keyExtractor={(item) => item}
             renderItem={({ item, index }) => (
             <Animatable.View animation="fadeInUp" delay={index * 150} useNativeDriver>

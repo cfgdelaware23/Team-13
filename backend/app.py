@@ -1,15 +1,14 @@
 import json
 from flask import Flask, request, jsonify
 from products import getProductInfo, getProducts, getProductCategory
-from cart import addToCart 
-
-
-from cart import subtractFromCart, deleteFromCart
-from cart import getCart
+from cart import addToCart, subtractFromCart, deleteFromCart, getCart 
+from flask_cors import CORS
 from flask import request
 from db import get_user_modifier
 
 app = Flask(__name__)
+CORS(app)
+
 
 @app.route('/')
 def hello_world():
