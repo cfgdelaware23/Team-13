@@ -37,6 +37,7 @@ const CartItem = ({startCount, product} : Props) => {
                     flex: 1,
                     justifyContent: "center",
                     backgroundColor: "#f4f4f4",
+                    maxHeight: "80%"
                 }}
                 type="clear"
                 icon={{ name: "delete-outline" }}
@@ -68,7 +69,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: 50
+        height: 50,
+        marginBottom: 36
     },
     textContainer: {
         display: "flex",
