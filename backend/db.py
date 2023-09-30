@@ -54,7 +54,9 @@ def add_product_to_cart(user_id, product_id, quantity):
     product_price = c.fetchone()
 
     c.execute("SELECT modifier FROM users WHERE id = ?;", [user_id])
-    modified_product_price  = c.fetchone()[0] * float(product_price[0])
+    # modified_product_price  = c.fetchone()[0] * float(product_price[0]) # adjust price before returning it
+    modified_product_price  = 1 * float(product_price[0]) # don't adjust price (will be done on frontend) 
+
    
     if existing_product:
         new_quantity = existing_product[1] + quantity
@@ -137,10 +139,17 @@ def add_product(product_id, product_price, product_name, product_sku, prod_categ
     c.execute("INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?);", (product_id, product_price, product_name, product_sku, prod_category, prod_image, prod_aisle))
     db.commit()
 
-    
-create_tables()
+def get_user_modifier(user_id:float): 
+    print(type(user_id))
+    c = db.cursor()
+    c.execute("SELECT modifier from users where id = ?", (user_id,))
+    modifier = c.fetchall()
+    return modifier[0][0]
 
 """
+
+create_tables()
+
 
 c.execute("DELETE FROM products")
 c.execute("DELETE FROM users")

@@ -4,6 +4,7 @@ from products import getProductInfo, getProducts, getProductCategory
 
 from cart import getCart
 from flask import request
+from db import get_user_modifier
 
 app = Flask(__name__)
 
@@ -39,18 +40,29 @@ def getProductsRoute():
 def getProductCategoryRoute(category):
     product = getProductCategory(category)
     if(product):
-        return jsonify(product)
+        return product
     else:
         return jsonify({'message': f'No products found for type: {category}'}), 404
     
 @app.route('/products/<int:product_id>', methods=['GET'])
 def getProductByIdRoute(product_id):
-    product = getProductInfo(id)
+    product = getProductInfo(product_id)
     if(product):
         return jsonify(product)
     else:
         return jsonify({'message': 'Product not found'}), 404
 
+
+@app.route("/user/modifier", methods=["POST"])
+def getUserModifierRoute():
+    data = request.get_json()
+    user_modifier = get_user_modifier(float(data["user_id"]))
+    return {
+        "user_modifier":user_modifier
+    }
+    
+
+
 if __name__ == "__main__":
-    app.run()   
+    app.run(debug=True)   
 
