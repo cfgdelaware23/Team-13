@@ -97,6 +97,8 @@ def remove_product_from_cart(user_id, product_id):
 def empty_cart(user_id):
     c = db.cursor()
     c.execute("DELETE FROM cartcontent WHERE card_id = ?;", (user_id,))
+    c.execute("UPDATE cart SET total_price = 0 WHERE user_id = ?;", (user_id,))
+    c.execute("UPDATE cart SET money_saved = 0 WHERE user_id = ?;", (user_id,))
     db.commit()
 
 def get_product_info(product_id):
@@ -107,7 +109,8 @@ def get_product_info(product_id):
 
 def calculate_cart_total(user_id):
     c = db.cursor()
-    c.execute("SELECT SUM(p.price * cc.quantity) FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
+    c.execute("SELECT total_price FROM cart WHERE user_id = ?;", (user_id,))
+    #c.execute("SELECT SUM(p.price * cc.quantity) FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
     total_price = c.fetchone()[0]
     return total_price if total_price else 0
 
@@ -135,21 +138,9 @@ def add_product(product_id, product_price, product_name, product_sku, prod_categ
     db.commit()
 
     
+create_tables()
+
 """
-create_tables()
-c.execute("DELETE FROM products")
-c.execute("DELETE FROM users")
-c.execute("DELETE FROM cart")
-create_tables()
-populate_tables()
-
-for i in range(512376, 512382):
-    create_user(i, 0.8)
-
-
-
-create_tables()
-
 
 c.execute("DELETE FROM products")
 c.execute("DELETE FROM users")
