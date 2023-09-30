@@ -14,13 +14,13 @@ def getCartRoute():
     return getCart(data)
 
 @app.route("/cart/add", methods =["PUT"])
-def addToCart():
+def addToCartRoute():
     pass
 
 @app.route("/cart/subtract", methods=["PUT"])
-def subtractFromCart():
+def subtractFromCartRoute():
     pass
 
 @app.route("/cart/delete", methods=["DELETE"])
-def deleteFromCart(): 
+def deleteFromCartRoute(): 
     pass
