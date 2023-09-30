@@ -140,6 +140,7 @@ def add_product(product_id, product_price, product_name, product_sku, prod_categ
     
 create_tables()
 
+"""
 
 c.execute("DELETE FROM products")
 c.execute("DELETE FROM users")
@@ -169,18 +170,4 @@ print(get_cart("512380"))
 remove_product_from_cart("512380", '1')
 print(get_cart("512380"))
 empty_cart("512380")
-print(get_cart("512380"))
-
-
-
-add_product_to_cart("512380", '1', 1)
-add_product_to_cart("512380", '1', 1)
-
-#get_product_info tests
-print(get_product_info('1'))
-
-#calculate_cart_total tests
-print(calculate_cart_total("512380")) #should be $2.40, NOT $3
-
-#get_cart_contents tests
-print(get_cart_contents("512380"))
+"""
