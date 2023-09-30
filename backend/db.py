@@ -151,7 +151,7 @@ def get_user_modifier(user_id:float):
     modifier = c.fetchall()
     return modifier[0][0]
 
-"""
+
 
 create_tables()
 
@@ -167,6 +167,8 @@ populate_tables()
 for i in range(512376, 512382):
     create_user(i, 0.8)
 
+"""
+
 #test population of products and users
 select_prods = "SELECT * FROM products"
 select_users = "SELECT * FROM users"
@@ -176,10 +178,10 @@ for user in user_rows:
     print(user)
 for prod in prod_rows:
     print(prod)
-
+"""
 add_product_to_cart("512380", '1', 1)
 add_product_to_cart("512380", '1', 1)
-
+"""
 print(get_cart("512380"))
 remove_product_from_cart("512380", '1')
 print(get_cart("512380"))

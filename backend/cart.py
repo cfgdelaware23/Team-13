@@ -1,4 +1,5 @@
-from db import get_cart, add_product_to_cart, remove_product_from_cart, empty_cart, get_cart, get_product_info
+from flask import request
+from db import get_cart_contents, remove_product_from_cart, empty_cart, add_product_to_cart, remove_product_from_cart, empty_cart, get_cart, get_product_info
 from products import getProductInfo
 
 def getCart(user_id):
@@ -17,12 +18,20 @@ def getCart(user_id):
         "shopping_cart": shopping_cart
     }
     
+    cart_details = get_cart_contents(user_id)
+    return {
+
+    }
+
 def addToCart(user_id, product_id):
     return add_product_to_cart(int(user_id), str(product_id), 1)
 
 def subtractFromCart(user_id, product_id):
-    pass
+    return remove_product_from_cart(int(user_id), str(product_id))
+
+
+def deleteFromCart(user_id):
+    return empty_cart(str(user_id))
 
 def deleteFromCart(user_id, product_id): 
-    
     pass

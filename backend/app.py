@@ -4,6 +4,7 @@ from products import getProductInfo, getProducts, getProductCategory
 from cart import addToCart 
 
 
+from cart import subtractFromCart, deleteFromCart
 from cart import getCart
 from flask import request
 from db import get_user_modifier
@@ -29,11 +30,18 @@ def addToCartRoute():
 
 @app.route("/cart/subtract", methods=["PUT"])
 def subtractFromCartRoute():
-    pass
+    data = request.get_json()
+    user_id = data["user_id"]
+    product_id = data["product_id"]
+    subtractFromCart(user_id, product_id)
+    return {'message': 'Removed an item successfully'}
 
 @app.route("/cart/delete", methods=["DELETE"])
 def deleteFromCartRoute(): 
-    pass
+    data = request.get_json()
+    deleteFromCart(data["user_id"])
+    return {'message': 'Emptied cart successfully'}
+
 
 # Product routes
 
@@ -70,5 +78,6 @@ def getUserModifierRoute():
 
 
 if __name__ == "__main__":
+    app.debug==True
     app.run(debug=True)   
 
