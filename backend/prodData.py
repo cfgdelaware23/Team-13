@@ -38,8 +38,3 @@ vegetable_products_list = get_vegetable_products(num_products=30)
 
 # Print the list
 print(vegetable_products_list)
-"""
-for i, product in enumerate(vegetable_products_list, start=1):
-    print(f"{i}. Product Name: {product['product_name']}")
-    print(f"   Image URL: {product['image_url']}\n")
-"""

@@ -3,6 +3,7 @@ from flask import render_template   #facilitate jinja templating
 from flask import request           #facilitate form submission
 from flask import session           #facilitate flask sessions
 import sqlite3   #enable control of an sqlite database
+import csv
 
 db = sqlite3.connect("chocolate.db", check_same_thread=False) #open if file exists, otherwise create
 c = db.cursor()               #facilitate db ops -- you will use cursor to trigger db events
@@ -15,6 +16,12 @@ def create_tables():
     c.execute("CREATE TABLE IF NOT EXISTS cartcontent(id TEXT, card_id INTEGER, product_id TEXT, quantity INTEGER)")
     c.execute("CREATE TABLE IF NOT EXISTS products(id TEXT, price TEXT, name TEXT, sku TEXT, category TEXT, image_url TEXT, aisle TEXT)")
     db.commit()
+
+def populate_tables():
+    prod_data_csv = open('prodData.csv')
+    contents = csv.reader(prod_data_csv)
+    insert_records = "INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    c.executemany(insert_records, contents)
 
 def create_user(id, modifier):
     c = db.cursor()
@@ -80,3 +87,14 @@ def get_products():
     c.execute("SELECT * from products")
     products = c.fetchall()
     return products
+
+
+
+create_tables()
+populate_tables()
+
+#test
+select_all = "SELECT * FROM products"
+rows = c.execute(select_all).fetchall()
+for row in rows:
+    print(row)
