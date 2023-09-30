@@ -1,29 +1,39 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { useState } from 'react';
-import CartItem from './components/CartItem';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import Welcome from './components/welcome'; 
+import Category from './components/category';
+import Fruits from './components/fruits';
+import Vegetables from './components/vegetables';
+import Protein from './components/protein';
 
-const ex_product = {
-  price: 15,
-  name: "apple",
-  sku: 12345,
-  category: "fruit",
-  imageURL: "https://thumbs.dreamstime.com/b/red-apple-isolated-clipping-path-19130134.jpg",
-  location: "aisle 1"
-}
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
-const ex = {
-startCount: 1,
-product: ex_product
-}
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  const [count, setCount] = useState(2);
   return (
-    <View style={styles.container}>
-      <CartItem startCount= {1} product= {ex_product}/>
-    </View>
-  )
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
+        <Stack.Screen name="Category" component={Category} />
+        <Stack.Screen name="Fruits" component={Fruits} />
+        <Stack.Screen name="Vegetables" component={Vegetables} />
+        <Stack.Screen name="Protein" component={Protein} />
+
+        {/* ... Other category screens like Vegetables, Protein, etc. */}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+  // return (
+  //   <NavigationContainer>
+  //     <Stack.Navigator>
+  //       <Stack.Screen name="Welcome" component={Welcome} />
+  //     </Stack.Navigator>
+  //   </NavigationContainer>
+  // );
 }
 
 const styles = StyleSheet.create({
