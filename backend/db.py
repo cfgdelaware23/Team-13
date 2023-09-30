@@ -115,11 +115,6 @@ def add_product(product_id, product_price, product_name, product_sku, prod_categ
     c.execute("INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?);", (product_id, product_price, product_name, product_sku, prod_category, prod_image, prod_aisle))
     db.commit()
 
-
-
-
-
-
     
 """
 create_tables()
