@@ -39,7 +39,7 @@ def getProductsRoute():
 def getProductCategoryRoute(category):
     product = getProductCategory(category)
     if(product):
-        return jsonify(product)
+        return product
     else:
         return jsonify({'message': f'No products found for type: {category}'}), 404
     
@@ -52,5 +52,5 @@ def getProductByIdRoute(product_id):
         return jsonify({'message': 'Product not found'}), 404
 
 if __name__ == "__main__":
-    app.run()   
+    app.run(debug=True)   
 
