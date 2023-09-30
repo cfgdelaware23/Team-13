@@ -18,10 +18,17 @@ def create_tables():
     db.commit()
 
 def populate_tables():
-    prod_data_csv = open('prodData.csv')
-    contents = csv.reader(prod_data_csv)
-    insert_records = "INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    c.executemany(insert_records, contents)
+    prod_data_csv = open('prodData.csv', encoding='utf-8-sig')
+    user_data_csv = open('user.csv', encoding='utf-8-sig')
+
+    prod_content = csv.reader(prod_data_csv)
+    user_content = csv.reader(user_data_csv)
+
+    insert_prod_records = "INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    insert_user_records = "INSERT INTO users (id, modifier) VALUES (?, ?)"
+
+    c.executemany(insert_prod_records, prod_content)
+    c.executemany(insert_user_records, user_content)
 
 def create_user(id, modifier):
     c = db.cursor()
@@ -94,7 +101,11 @@ create_tables()
 populate_tables()
 
 #test
-select_all = "SELECT * FROM products"
-rows = c.execute(select_all).fetchall()
-for row in rows:
-    print(row)
+select_prods = "SELECT * FROM products"
+select_users = "SELECT * FROM users"
+prod_rows = c.execute(select_prods).fetchall()
+user_rows = c.execute(select_users).fetchall()
+for user in user_rows:
+    print(user)
+for prod in prod_rows:
+    print(prod)
