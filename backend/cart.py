@@ -32,6 +32,3 @@ def subtractFromCart(user_id, product_id):
 
 def deleteFromCart(user_id):
     return empty_cart(str(user_id))
-
-def deleteFromCart(user_id, product_id): 
-    pass
