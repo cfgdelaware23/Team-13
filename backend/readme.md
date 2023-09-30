@@ -66,10 +66,14 @@ cd backend
    pip install -r requirements.txt
    ```
 
-5. 
-
-Run the flask app
+5. Run the flask app
 
 ```txt
 flask run
+```
+
+To run in debugger mode: 
+
+```
+flask --app app --debug run
 ```
