@@ -11,7 +11,8 @@ def getProductInfo(product_id):
         "name":product_details[2], 
         "sku": int(product_details[3]), 
         "category":product_details[4],
-        "image_url":product_details[5]
+        "image_url":product_details[5],
+        "aisle":product_details[6]
     }
 
 def getProductCategory(category):
@@ -19,16 +20,16 @@ def getProductCategory(category):
     formatted_products = []
     for product_details in get_products_of_type(category): 
         product = {
-            "price": float(product_details[0]), 
-            "product_name": (product_details[1]), 
-            "sku":int(product_details[2]), 
+            "product_id":product_details[0],
+            "price": float(product_details[1]), 
+            "product_name": (product_details[2]), 
+            "sku":int(product_details[3]), 
             "category":category,
-            "image_url":(product_details[3]), 
-            "product_id":int(product_details[4])
+            "image_url":(product_details[4]), 
+            "aisle":int(product_details[5]),
         }
         
         formatted_products.append(product)
-    # return get_products_of_type(category)
     return {
         "products": formatted_products
     }
@@ -42,7 +43,8 @@ def getProducts():
             "name":product_details[2], 
             "sku": int(product_details[3]), 
             "category":product_details[4],
-            "image_url":product_details[5]
+            "image_url":product_details[5],
+            "aisle":product_details[6]
         }
 
         formatted_products.append(product)
