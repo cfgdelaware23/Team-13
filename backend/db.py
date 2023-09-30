@@ -68,3 +68,15 @@ def get_cart_contents(user_id):
     c.execute("SELECT p.*, cc.quantity FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
     cart_contents = c.fetchall()
     return cart_contents
+
+def get_products_of_type(type):
+    c = db.cursor()
+    c.execute("SELECT price, name, location, sku, image_url FROM products WHERE category = ?;", (type,))
+    type_contents = c.fetchall()
+    return type_contents
+
+def get_products():
+    c = db.cursor()
+    c.execute("SELECT * from products")
+    products = c.fetchall()
+    return products
