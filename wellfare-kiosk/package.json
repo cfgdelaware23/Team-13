@@ -19,6 +19,8 @@
     "picker": "^0.1.4",
     "react": "18.2.0",
     "react-native": "0.72.5",
+    "react-native-pulse": "^1.0.7",
+    "react-native-vector-icons": "^10.0.0"
     "react-native-animatable": "^1.3.3",
     "react-native-haptic-feedback": "^2.2.0"
   },

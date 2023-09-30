@@ -1,7 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import CartScrollable from '../components/CartScrollable';
-import {Text} from '@rneui/themed';
+import {FAB, Text} from '@rneui/themed';
 import { useEffect, useState } from 'react';
+import CategoryBtn from "../components/CategoryBtn"
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Product {
     price: number;
@@ -16,6 +18,7 @@ interface Product {
 interface Props {
   shoppingList: Array<Product>
   augmentationFunction: (a: number) => number
+  navigation: {navigation: any}
 }
 
 const list = [
@@ -41,7 +44,7 @@ const list = [
 ];
 
 /** Component for Dummy Page */
- const Cart = ({shoppingList, augmentationFunction} : Props) => {
+ const Cart = ({shoppingList, augmentationFunction, navigation} : Props) => {
     shoppingList = list;
     let temp = 0;
     augmentationFunction = (n) => n / 3
@@ -70,8 +73,16 @@ const list = [
         <View style={styles.textContainer}>
             <Text h1>{"Current Total: $" + currentTotal}</Text>
             <Text h4>{"You saved $" + (currentTotalNoDiscount - currentTotal)}</Text>
+            <FAB
+                icon={<MaterialCommunityIcons name="view-list" color={"white"} size={25}/>}
+                color="#E9BC8B"
+                placement="right"
+                onPress={() => navigation.navigate('Category')}
+        />
         </View>
+        
     </View>
+
   );
 };
 
