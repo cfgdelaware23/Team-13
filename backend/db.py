@@ -43,34 +43,39 @@ def get_cart(user_id):
     
     return cart_metadata, cart_products
 
-def add_product_to_cart(user_id, product_id, quantity):
+def add_product_to_cart(user_id, product_id, quantity) -> bool:
 
-    c = db.cursor()
+    try: 
+        c = db.cursor()
+        
+        c.execute("SELECT id, quantity FROM cartcontent WHERE card_id = ? AND product_id = ?;", (user_id, product_id))
+        existing_product = c.fetchone()
+
+        c.execute("SELECT price FROM products WHERE id = ?;", (product_id))
+        product_price = c.fetchone()
+
+        c.execute("SELECT modifier FROM users WHERE id = ?;", [user_id])
+        # modified_product_price  = c.fetchone()[0] * float(product_price[0]) # adjust price before returning it
+        modified_product_price  = 1 * float(product_price[0]) # don't adjust price (will be done on frontend) 
+
     
-    c.execute("SELECT id, quantity FROM cartcontent WHERE card_id = ? AND product_id = ?;", (user_id, product_id))
-    existing_product = c.fetchone()
+        if existing_product:
+            new_quantity = existing_product[1] + quantity
+            c.execute("UPDATE cartcontent SET quantity =" + str(new_quantity)+ " WHERE card_id = ? and product_id = ?;", (user_id, product_id))
+        else:
+            c.execute("INSERT INTO cartcontent (card_id, product_id, quantity) VALUES (?, ?, ?);", (user_id, product_id, quantity))
+        
 
-    c.execute("SELECT price FROM products WHERE id = ?;", (product_id))
-    product_price = c.fetchone()
+        c.execute("SELECT total_price, money_saved FROM cart WHERE user_id = ?;", (user_id,))
+        curr_totals = c.fetchall()
+        c.execute("UPDATE cart SET total_price = ? WHERE user_id = ?;", (round(float(curr_totals[0][0]), 3)+modified_product_price, user_id))
+        c.execute("UPDATE cart SET money_saved = ? WHERE user_id = ?;", (round(float(curr_totals[0][1]), 3)+round(float(product_price[0]), 3), user_id))
 
-    c.execute("SELECT modifier FROM users WHERE id = ?;", [user_id])
-    # modified_product_price  = c.fetchone()[0] * float(product_price[0]) # adjust price before returning it
-    modified_product_price  = 1 * float(product_price[0]) # don't adjust price (will be done on frontend) 
+        db.commit()
+        return True
+    except ValueError:
+        return False 
 
-   
-    if existing_product:
-        new_quantity = existing_product[1] + quantity
-        c.execute("UPDATE cartcontent SET quantity =" + str(new_quantity)+ " WHERE card_id = ? and product_id = ?;", (user_id, product_id))
-    else:
-        c.execute("INSERT INTO cartcontent (card_id, product_id, quantity) VALUES (?, ?, ?);", (user_id, product_id, quantity))
-    
-
-    c.execute("SELECT total_price, money_saved FROM cart WHERE user_id = ?;", (user_id,))
-    curr_totals = c.fetchall()
-    c.execute("UPDATE cart SET total_price = ? WHERE user_id = ?;", (round(float(curr_totals[0][0]), 3)+modified_product_price, user_id))
-    c.execute("UPDATE cart SET money_saved = ? WHERE user_id = ?;", (round(float(curr_totals[0][1]), 3)+round(float(product_price[0]), 3), user_id))
-
-    db.commit()
 
 def remove_product_from_cart(user_id, product_id):
     c = db.cursor()
@@ -124,7 +129,7 @@ def get_cart_contents(user_id):
 
 def get_products_of_type(type):
     c = db.cursor()
-    c.execute("SELECT price, name, sku, image_url, aisle FROM products WHERE category = ?;", (type,))
+    c.execute("SELECT id, price, name, sku, image_url, aisle FROM products WHERE category = ?;", (type,))
     type_contents = c.fetchall()
     return type_contents
 
@@ -146,7 +151,7 @@ def get_user_modifier(user_id:float):
     modifier = c.fetchall()
     return modifier[0][0]
 
-"""
+
 
 create_tables()
 
@@ -162,6 +167,8 @@ populate_tables()
 for i in range(512376, 512382):
     create_user(i, 0.8)
 
+"""
+
 #test population of products and users
 select_prods = "SELECT * FROM products"
 select_users = "SELECT * FROM users"
@@ -171,10 +178,10 @@ for user in user_rows:
     print(user)
 for prod in prod_rows:
     print(prod)
-
+"""
 add_product_to_cart("512380", '1', 1)
 add_product_to_cart("512380", '1', 1)
-
+"""
 print(get_cart("512380"))
 remove_product_from_cart("512380", '1')
 print(get_cart("512380"))
