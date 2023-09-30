@@ -13,7 +13,7 @@ def create_tables():
     c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER, modifier INTEGER)")
     c.execute("CREATE TABLE IF NOT EXISTS cart(user_id INTEGER, total_price TEXT, money_saved TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS cartcontent(id TEXT, card_id INTEGER, product_id TEXT, quantity INTEGER)")
-    c.execute("CREATE TABLE IF NOT EXISTS products(id TEXT, price TEXT, name TEXT, location TEXT, sku TEXT, category TEXT, image_url TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS products(id TEXT, price TEXT, name TEXT, sku TEXT, category TEXT, image_url TEXT, aisle TEXT)")
     db.commit()
 
 def create_user(id, modifier):
@@ -71,7 +71,7 @@ def get_cart_contents(user_id):
 
 def get_products_of_type(type):
     c = db.cursor()
-    c.execute("SELECT price, name, location, sku, image_url FROM products WHERE category = ?;", (type,))
+    c.execute("SELECT price, name, sku, image_url, aisle FROM products WHERE category = ?;", (type,))
     type_contents = c.fetchall()
     return type_contents
 
