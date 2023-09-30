@@ -19,7 +19,8 @@
     "picker": "^0.1.4",
     "react": "18.2.0",
     "react-native": "0.72.5",
-    "react-native-pulse": "^1.0.7"
+    "react-native-pulse": "^1.0.7",
+    "react-native-vector-icons": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

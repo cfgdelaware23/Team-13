@@ -23,6 +23,7 @@ export default function App() {
         }}>
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Cart" component={Cart} />
+        <Stack.Screen name="Category" component={Category} />
       </Stack.Navigator>
     </NavigationContainer>
   );

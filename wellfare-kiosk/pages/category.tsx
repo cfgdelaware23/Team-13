@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { FAB } from '@rneui/themed';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Category = () => {
+
+const Category = ({ navigation }: {navigation: any}) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showPicker, setShowPicker] = useState(true);
   const [showViewAll, setShowViewAll] = useState(false);
@@ -84,6 +87,12 @@ const Category = () => {
           />
         </View>
       )}
+      <FAB
+                icon={<MaterialCommunityIcons name="basket" color={"white"} size={25}/>}
+                color="#E9BC8B"
+                placement="right"
+                onPress={() => navigation.navigate('Cart')}
+        />
     </View>
   );
 };
