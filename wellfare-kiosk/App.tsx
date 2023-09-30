@@ -15,16 +15,14 @@ import CartScrollable from './components/CartScrollable';
 const Stack = createStackNavigator();
 
 export default function App() {
+
   return (
-    <CartScrollable/>
-  );
-  // return (
-  //   <NavigationContainer>
-  //     <Stack.Navigator>
-  //       <Stack.Screen name="Welcome" component={Welcome} />
-  //     </Stack.Navigator>
-  //   </NavigationContainer>
-  // );
+     <NavigationContainer>
+       <Stack.Navigator>
+         <Stack.Screen name="Welcome" component={Welcome} />
+       </Stack.Navigator>
+     </NavigationContainer>
+   );
 }
 
 const styles = StyleSheet.create({
