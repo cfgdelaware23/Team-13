@@ -1,13 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import CartIncrement from './components/CartIncrement';
+import { useState } from 'react';
 
 export default function App() {
+  const [count, setCount] = useState(2);
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <CartIncrement setCount = {setCount} count = {count}/>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
