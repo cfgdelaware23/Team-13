@@ -1,5 +1,31 @@
 ## API Documentation:
 
+### User: 
+
+Fetch user modifier
+
+```ts
+{
+	"user_modifier": number,
+}
+```
+- Endpoint: ``http://127.0.0.1:5000/user/modifier``
+- Method: `POST`
+- Request Body:
+
+	```ts
+	{
+		"user_id":number
+	}
+	```
+
+- Example
+	```json
+	{
+		"user_modifier": 0.8
+	}
+	```
+
 ### Products: 
 
 General overview of what the ``product`` object looks like:
