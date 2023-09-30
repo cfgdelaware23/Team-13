@@ -31,9 +31,8 @@ def deleteFromCartRoute():
 # Product routes
 
 @app.route('/products', methods=['GET'])
-def getProducts():
-    response = request.get('/products')
-    products = getProducts().json
+def getProductsRoute():
+    products = jsonify(getProducts())
     return products
 
 @app.route('/products/<category>', methods=['GET'])
@@ -44,8 +43,8 @@ def getProductCategoryRoute(category):
     else:
         return jsonify({'message': f'No products found for type: {category}'}), 404
     
-@app.route('/products/<product>', methods=['GET'])
-def getProductById(id):
+@app.route('/products/<int:product_id>', methods=['GET'])
+def getProductByIdRoute(product_id):
     product = getProductInfo(id)
     if(product):
         return jsonify(product)
