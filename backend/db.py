@@ -12,7 +12,7 @@ def create_tables():
     c = db.cursor()
     c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER, modifier INTEGER)")
     c.execute("CREATE TABLE IF NOT EXISTS cart(user_id INTEGER, total_price TEXT, money_saved TEXT)")
-    c.execute("CREATE TABLE IF NOT EXISTS cartcontent(card_id INTEGER, product_id TEXT, quantity INTEGER)")
+    c.execute("CREATE TABLE IF NOT EXISTS cartcontent(id TEXT, card_id INTEGER, product_id TEXT, quantity INTEGER)")
     c.execute("CREATE TABLE IF NOT EXISTS products(id TEXT, price TEXT, name TEXT, location TEXT, sku TEXT, category TEXT, image_url TEXT)")
     db.commit()
 
@@ -50,3 +50,21 @@ def empty_cart(user_id):
     c = db.cursor()
     c.execute("DELETE FROM cartcontent WHERE card_id = ?;", (user_id,))
     db.commit()
+
+def get_product_info(product_id):
+    c = db.cursor()
+    c.execute("SELECT * FROM products WHERE id = ?;", (product_id,))
+    product_data = c.fetchone()
+    return product_data
+
+def calculate_cart_total(user_id):
+    c = db.cursor()
+    c.execute("SELECT SUM(p.price * cc.quantity) FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
+    total_price = c.fetchone()[0]
+    return total_price if total_price else 0
+
+def get_cart_contents(user_id):
+    c = db.cursor()
+    c.execute("SELECT p.*, cc.quantity FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
+    cart_contents = c.fetchall()
+    return cart_contents
