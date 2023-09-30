@@ -44,8 +44,8 @@ def getProductCategoryRoute(category):
     else:
         return jsonify({'message': f'No products found for type: {category}'}), 404
     
-@app.route('/products/<product>', methods=['GET'])
-def getProductById(id):
+@app.route('/products/<int:product_id>', methods=['GET'])
+def getProductById(product_id):
     product = getProductInfo(id)
     if(product):
         return jsonify(product)
