@@ -60,26 +60,47 @@ def add_product_to_cart(user_id, product_id, quantity):
    
     if existing_product:
         new_quantity = existing_product[1] + quantity
-        c.execute("UPDATE cartcontent SET quantity = ? WHERE id = ?;", (new_quantity, existing_product[0]))
+        c.execute("UPDATE cartcontent SET quantity =" + str(new_quantity)+ " WHERE card_id = ? and product_id = ?;", (user_id, product_id))
     else:
         c.execute("INSERT INTO cartcontent (card_id, product_id, quantity) VALUES (?, ?, ?);", (user_id, product_id, quantity))
     
 
     c.execute("SELECT total_price, money_saved FROM cart WHERE user_id = ?;", (user_id,))
     curr_totals = c.fetchall()
-    c.execute("UPDATE cart SET total_price = ? WHERE user_id = ?;", (float(curr_totals[0][0])+modified_product_price, user_id))
-    c.execute("UPDATE cart SET money_saved = ? WHERE user_id = ?;", (float(curr_totals[0][1])+float(product_price[0]), user_id))
+    c.execute("UPDATE cart SET total_price = ? WHERE user_id = ?;", (round(float(curr_totals[0][0]), 3)+modified_product_price, user_id))
+    c.execute("UPDATE cart SET money_saved = ? WHERE user_id = ?;", (round(float(curr_totals[0][1]), 3)+round(float(product_price[0]), 3), user_id))
 
     db.commit()
 
 def remove_product_from_cart(user_id, product_id):
     c = db.cursor()
-    c.execute("DELETE FROM cartcontent WHERE card_id = ? AND product_id = ?;", (user_id, product_id))
+    #check if there are multiple of product
+    c.execute("SELECT id, quantity FROM cartcontent WHERE quantity > 1 AND card_id = ? AND product_id = ?;", (user_id, product_id))
+    multiple = c.fetchone()
+
+    if multiple:
+        new_quantity = multiple[1] - 1
+        c.execute("UPDATE cartcontent SET quantity =" + str(new_quantity)+ " WHERE card_id = ? and product_id = ?;", (user_id, product_id))
+    else:
+        c.execute("DELETE FROM cartcontent WHERE card_id = ? AND product_id = ?;", (user_id, product_id))
+
+    c.execute("SELECT price FROM products where id = ?;", (product_id,))
+    product_price = c.fetchone()
+
+    c.execute("SELECT modifier FROM users WHERE id = ?;", [user_id])
+    modified_product_price  = round(c.fetchone()[0], 3) * round(float(product_price[0]), 3)
+
+    c.execute("SELECT total_price, money_saved FROM cart WHERE user_id = ?;", (user_id,))
+    curr_totals = c.fetchall()
+    c.execute("UPDATE cart SET total_price = ? WHERE user_id = ?;", (round(float(curr_totals[0][0]), 3)-round(modified_product_price, 3), user_id))
+    c.execute("UPDATE cart SET money_saved = ? WHERE user_id = ?;", (round(float(curr_totals[0][1]), 3)-round(float(product_price[0]), 3), user_id))
     db.commit()
 
 def empty_cart(user_id):
     c = db.cursor()
     c.execute("DELETE FROM cartcontent WHERE card_id = ?;", (user_id,))
+    c.execute("UPDATE cart SET total_price = 0 WHERE user_id = ?;", (user_id,))
+    c.execute("UPDATE cart SET money_saved = 0 WHERE user_id = ?;", (user_id,))
     db.commit()
 
 def get_product_info(product_id):
@@ -90,7 +111,8 @@ def get_product_info(product_id):
 
 def calculate_cart_total(user_id):
     c = db.cursor()
-    c.execute("SELECT SUM(p.price * cc.quantity) FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
+    c.execute("SELECT total_price FROM cart WHERE user_id = ?;", (user_id,))
+    #c.execute("SELECT SUM(p.price * cc.quantity) FROM products AS p JOIN cartcontent AS cc ON p.id = cc.product_id WHERE cc.card_id = ?;", (user_id,))
     total_price = c.fetchone()[0]
     return total_price if total_price else 0
 
@@ -125,19 +147,15 @@ def get_user_modifier(user_id:float):
     return modifier[0][0]
 
 """
-create_tables()
-c.execute("DELETE FROM products")
-c.execute("DELETE FROM users")
-c.execute("DELETE FROM cart")
-create_tables()
-populate_tables()
 
-for i in range(512376, 512382):
-    create_user(i, 0.8)
+create_tables()
+
 
 c.execute("DELETE FROM products")
 c.execute("DELETE FROM users")
 c.execute("DELETE FROM cart")
+c.execute("DELETE FROM cartcontent")
+
 create_tables()
 populate_tables()
 
@@ -155,5 +173,10 @@ for prod in prod_rows:
     print(prod)
 
 add_product_to_cart("512380", '1', 1)
+add_product_to_cart("512380", '1', 1)
+
 print(get_cart("512380"))
+remove_product_from_cart("512380", '1')
+print(get_cart("512380"))
+empty_cart("512380")
 """
