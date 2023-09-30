@@ -28,6 +28,8 @@ def subtractFromCartRoute():
 def deleteFromCartRoute(): 
     pass
 
+# Product routes
+
 @app.route('/products', methods=['GET'])
 def getProducts():
     response = request.get('/products')
@@ -50,6 +52,6 @@ def getProductById(id):
     else:
         return jsonify({'message': 'Product not found'}), 404
 
-if __name__ == "__maine__":
+if __name__ == "__main__":
     app.run(debug=True)   
 
