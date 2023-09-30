@@ -117,7 +117,21 @@ def add_product(product_id, product_price, product_name, product_sku, prod_categ
 
 
 
+
+
+
+    
 """
+create_tables()
+c.execute("DELETE FROM products")
+c.execute("DELETE FROM users")
+c.execute("DELETE FROM cart")
+create_tables()
+populate_tables()
+
+for i in range(512376, 512382):
+    create_user(i, 0.8)
+
 c.execute("DELETE FROM products")
 c.execute("DELETE FROM users")
 c.execute("DELETE FROM cart")
