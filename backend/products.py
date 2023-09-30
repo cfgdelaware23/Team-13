@@ -3,7 +3,7 @@ import json
 
 # get product info
 def getProductInfo(product_id):
-    return get_product_info()
+    return get_product_info(product_id)
 
 def getProductCategory(category):
     return get_products_of_type(category)

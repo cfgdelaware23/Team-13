@@ -45,7 +45,7 @@ def getProductCategoryRoute(category):
     
 @app.route('/products/<int:product_id>', methods=['GET'])
 def getProductByIdRoute(product_id):
-    product = getProductInfo(id)
+    product = getProductInfo(product_id)
     if(product):
         return jsonify(product)
     else:
