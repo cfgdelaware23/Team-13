@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,14 +15,27 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const Category = ({ navigation }: { navigation: any }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [productsByCategory, setProductsByCategory] = useState([]);
   const [showPicker, setShowPicker] = useState(true);
   const [showViewAll, setShowViewAll] = useState(false);
 
+
+
   const categories = {
-    Fruits: ['Apple', 'Banana', 'Orange', 'Strawberry', 'Watermelon', 'Pear'],
-    Vegetables: ['Broccoli', 'Carrot', 'Lettuce'],
-    Protein: ['Chicken', 'Fish', 'Tofu'],
+    Fruit: ['Apple', 'Banana', 'Orange', 'Strawberry', 'Watermelon', 'Pear'],
+    Vegetable: ['Broccoli', 'Carrot', 'Lettuce'],
+    Legume: ['Chicken', 'Fish', 'Tofu'],
   };
+  async function fetchProducts(){
+    const response = await fetch(`http://127.0.0.1:5000/products/${selectedCategory}`)
+    const responseData = await response.json()
+    setProductsByCategory(responseData.products.map((element:any)=>{
+      return element.product_name
+    }))
+  }
+  useEffect(()=>{
+    if (selectedCategory !== null) fetchProducts()
+  }, [selectedCategory])
 
   const allItems = Object.values(categories).flat();
 
@@ -31,7 +44,8 @@ const Category = ({ navigation }: { navigation: any }) => {
     enableVibrateFallback: true,
     ignoreAndroidSystemSettings: false,
   };
-  return (
+    
+  return (  
     <View style={styles.container}>
       <LinearGradient
         colors={['#FBEBDB', '#6F96A3']}
@@ -85,36 +99,29 @@ const Category = ({ navigation }: { navigation: any }) => {
               </TouchableOpacity>
             </View>
           </View>
-        )}
-        {categories[selectedCategory]?.length === 0 && (
+        </View>
+      )}
+        {productsByCategory?.length === 0 && (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>No items in this category.</Text>
           </View>
         )}
-        {selectedCategory && !showPicker && !showViewAll && (
-          <View style={styles.listContainer}>
-            <TouchableOpacity
-              style={styles.changeButton}
-              onPress={() => setShowPicker(true)}
-            >
-              <Text style={styles.changeButtonText}>Change Category</Text>
-            </TouchableOpacity>
-            <FlatList
-              data={categories[selectedCategory]}
-              keyExtractor={(item) => item}
-              renderItem={({ item, index }) => (
-                <Animatable.View
-                  animation='fadeInUp'
-                  delay={index * 150}
-                  useNativeDriver
-                >
-                  <Text style={styles.item}>{item}</Text>
-                </Animatable.View>
-              )}
-            />
-          </View>
-        )}
-
+      {selectedCategory && !showPicker && !showViewAll && (
+        <View style={styles.listContainer}>
+          <TouchableOpacity style={styles.changeButton} onPress={() => setShowPicker(true)}>
+            <Text style={styles.changeButtonText}>Change Category</Text>
+          </TouchableOpacity>
+          <FlatList
+            data={productsByCategory}
+            keyExtractor={(item) => item}
+            renderItem={({ item, index }) => (
+            <Animatable.View animation="fadeInUp" delay={index * 150} useNativeDriver>
+            <Text style={styles.item}>{item}</Text>
+          </Animatable.View>
+            )}
+          />
+        </View>
+      )}
         {showViewAll && (
           <View style={styles.listContainer}>
             <TouchableOpacity
