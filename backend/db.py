@@ -15,7 +15,7 @@ def create_tables():
     c.execute("CREATE TABLE IF NOT EXISTS cart(user_id INTEGER, total_price TEXT, money_saved TEXT)")
     c.execute("CREATE TABLE IF NOT EXISTS cartcontent(id TEXT, card_id INTEGER, product_id TEXT, quantity INTEGER)")
     c.execute("CREATE TABLE IF NOT EXISTS products(id TEXT, price TEXT, name TEXT, sku TEXT, category TEXT, image_url TEXT, aisle TEXT)")
-    db.commit()
+    db.commit() 
 
 def populate_tables():
     prod_data_csv = open('prodData.csv', encoding='utf-8-sig')
@@ -95,7 +95,10 @@ def get_products():
     products = c.fetchall()
     return products
 
-
+def add_product(product_id, product_price, product_name, product_sku, prod_category, prod_image, prod_aisle):
+    c = db.cursor()
+    c.execute("INSERT INTO products (id, price, name, sku, category, image_url, aisle) VALUES (?, ?, ?, ?, ?, ?, ?);", (product_id, product_price, product_name, product_sku, prod_category, prod_image, prod_aisle))
+    db.commit()
 
 create_tables()
 populate_tables()
