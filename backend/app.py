@@ -45,7 +45,7 @@ def deleteFromCartRoute():
 
 # Product routes
 
-@app.route('/products', methods=['POST'])
+@app.route('/products', methods=['GET'])
 def getProductsRoute():
     products = jsonify(getProducts())
     return products
