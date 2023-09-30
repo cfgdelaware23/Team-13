@@ -7,7 +7,6 @@ import Category from './pages/category';
 import Fruits from './pages/fruits';
 import Vegetables from './pages/vegetables';
 import Protein from './pages/protein';
-import Category from './pages/category'; 
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
